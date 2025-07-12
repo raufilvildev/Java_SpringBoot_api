@@ -3,6 +3,7 @@ package com.mi_app.api.module.user.service;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.mi_app.api.exception.DuplicateUserException;
@@ -21,6 +22,7 @@ import lombok.AllArgsConstructor;
 public class UserService {
   private final UserRepository userRepository;
   private final JwtUtil jwtUtil;
+  private final PasswordEncoder passwordEncoder;
 
   public User getByUuid(String uuid) {
     return userRepository.findByUuid(uuid).orElseThrow(() -> new UserNotFoundException("uuid", uuid));
@@ -39,6 +41,7 @@ public class UserService {
 
     User user = userSignupDto.generateUser();
     user.setUuid(UUID.randomUUID().toString());
+    user.setPassword(passwordEncoder.encode(userSignupDto.getPassword()));
     user = userRepository.save(user);
 
     return jwtUtil.generateToken(user.getUuid());

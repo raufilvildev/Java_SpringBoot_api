@@ -1,5 +1,6 @@
 package com.mi_app.api.module.authentication.service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.mi_app.api.exception.IncorrectCredentialsException;
@@ -15,12 +16,14 @@ import lombok.AllArgsConstructor;
 public class AuthenticationService {
   private final UserRepository userRepository;
   private final JwtUtil jwtUtil;
+  private final PasswordEncoder passwordEncoder;
 
   public String login(AuthenticationLoginDto authenticationLoginDto) {
     User user = userRepository.findByUsername(authenticationLoginDto.getUsername())
         .orElseThrow(() -> new IncorrectCredentialsException());
 
-    if (!authenticationLoginDto.getPassword().equals(user.getPassword())) {
+    boolean passwordMatches = passwordEncoder.matches(authenticationLoginDto.getPassword(), user.getPassword());
+    if (!passwordMatches) {
       throw new IncorrectCredentialsException();
     }
 
