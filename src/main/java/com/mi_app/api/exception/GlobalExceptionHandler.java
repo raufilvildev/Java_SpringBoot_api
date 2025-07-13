@@ -45,4 +45,11 @@ public class GlobalExceptionHandler {
     return ResponseEntity.badRequest().body(errors);
   }
 
+  @ExceptionHandler(InvalidTokenException.class)
+  public ResponseEntity<Map<String, String>> handleInvalidToken(InvalidTokenException exception) {
+    Map<String, String> response = new HashMap<>();
+    response.put("message", exception.getMessage());
+    response.put("type", exception.getType());
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+  }
 }

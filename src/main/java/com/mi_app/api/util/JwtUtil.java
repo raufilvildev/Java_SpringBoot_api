@@ -47,7 +47,7 @@ public class JwtUtil {
       builder.expiration(new Date(System.currentTimeMillis() + expirationTimeMs));
     }
 
-    return "Bearer " + builder.signWith(secretKey).compact();
+    return builder.signWith(secretKey).compact();
   }
 
   public String extractUuid(String token) {

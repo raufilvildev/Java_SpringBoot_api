@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mi_app.api.module.authentication.dto.AuthenticationLoginDto;
+import com.mi_app.api.module.authentication.dto.RefreshAccessTokenDto;
 import com.mi_app.api.module.authentication.service.AuthenticationService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -24,4 +26,12 @@ public class AuthenticationController {
     Map<String, String> response = authenticationService.login(authenticationLoginDto);
     return ResponseEntity.ok(response);
   }
+
+  @PostMapping("/refresh_access_token")
+  public Map<String, String> refreshAccessToken(HttpServletRequest request,
+      @RequestBody RefreshAccessTokenDto refreshAccessTokenDto) {
+    Map<String, String> response = authenticationService.refreshAccessToken(refreshAccessTokenDto.getRefreshToken());
+    return response;
+  }
+
 }

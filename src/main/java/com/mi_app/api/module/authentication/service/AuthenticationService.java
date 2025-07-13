@@ -32,7 +32,17 @@ public class AuthenticationService {
 
     Map<String, String> response = new HashMap<>();
     response.put("refreshToken", jwtUtil.generateToken(user.getUuid(), false));
-    response.put("accessToken", jwtUtil.generateToken(user.getUuid(), true));
+    response.put("accessToken", "Bearer " + jwtUtil.generateToken(user.getUuid(), true));
+    return response;
+  }
+
+  public Map<String, String> refreshAccessToken(String refreshToken) {
+    jwtUtil.validateToken(refreshToken);
+    String uuid = jwtUtil.extractUuid(refreshToken);
+    String accessToken = jwtUtil.generateToken(uuid, true);
+
+    Map<String, String> response = new HashMap<>();
+    response.put("accessToken", accessToken);
     return response;
   }
 }

@@ -48,7 +48,7 @@ public class UserService {
 
     Map<String, String> response = new HashMap<>();
     response.put("refreshToken", jwtUtil.generateToken(user.getUuid(), false));
-    response.put("accessToken", jwtUtil.generateToken(user.getUuid(), true));
+    response.put("accessToken", "Bearer " + jwtUtil.generateToken(user.getUuid(), true));
     return response;
   }
 

@@ -34,6 +34,11 @@
       "name": "jwt.expiration-ms",
       "type": "java.lang.Integer",
       "description": "JWT Expiration Time in Miliseconds"
+    },
+    {
+      "name": "frontend.origin",
+      "type": "java.lang.String",
+      "description": "Frontend Origin"
     }
   ]
 }
