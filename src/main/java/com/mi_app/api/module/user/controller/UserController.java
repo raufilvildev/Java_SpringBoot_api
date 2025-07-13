@@ -38,9 +38,7 @@ public class UserController {
 
   @PostMapping("/signup")
   public ResponseEntity<Map<String, String>> insert(@RequestBody @Valid UserSignupDto userSignupDto) {
-    String token = userService.insert(userSignupDto);
-    Map<String, String> response = new HashMap<>();
-    response.put("token", token);
+    Map<String, String> response = userService.insert(userSignupDto);
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 

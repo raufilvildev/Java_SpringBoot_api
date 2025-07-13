@@ -39,29 +39,28 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     String authorizationHeader = request.getHeader("Authorization");
     try {
       if (authorizationHeader == null) {
-        throw new InvalidTokenException(" No existe cabecera Authorization.");
+        throw new InvalidTokenException("invalid", " No existe cabecera Authorization.");
       }
 
       if (!authorizationHeader.startsWith("Bearer")) {
-        throw new InvalidTokenException(" El token no empieza por 'Bearer'.");
+        throw new InvalidTokenException("invalid", " El token no empieza por 'Bearer'.");
       }
 
       String token = authorizationHeader.replace("Bearer", "").trim();
 
       if (token.isEmpty()) {
-        throw new InvalidTokenException(" El token es vacío.");
+        throw new InvalidTokenException("invalid", " El token es vacío.");
       }
 
       String uuid = jwtUtil.extractUuid(token);
       if (uuid.isBlank()) {
-        throw new InvalidTokenException(" El uuid es vacío.");
+        throw new InvalidTokenException("invalid", " El uuid es vacío.");
       }
 
       UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
           uuid,
           null,
-          Collections.emptyList() // sin roles ni permisos
-      );
+          Collections.emptyList());
 
       SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -73,7 +72,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       response.setContentType("application/json");
 
-      String json = "{\"message\": \"" + exception.getMessage().replace("\"", "'") + "\"}";
+      String json = "{\"message\": \"" + exception.getMessage().replace("\"", "'") + "\", \"type\": \""
+          + exception.getType() + "\"}";
 
       response.getWriter().write(json);
       response.getWriter().flush();

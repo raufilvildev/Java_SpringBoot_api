@@ -1,5 +1,7 @@
 package com.mi_app.api.module.user.service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,7 +30,7 @@ public class UserService {
     return userRepository.findByUuid(uuid).orElseThrow(() -> new UserNotFoundException("uuid", uuid));
   }
 
-  public String insert(UserSignupDto userSignupDto) {
+  public Map<String, String> insert(UserSignupDto userSignupDto) {
     String email = userSignupDto.getEmail();
     if (userRepository.existsByEmail(email)) {
       throw new DuplicateUserException("email", email);
@@ -44,7 +46,10 @@ public class UserService {
     user.setPassword(passwordEncoder.encode(userSignupDto.getPassword()));
     user = userRepository.save(user);
 
-    return jwtUtil.generateToken(user.getUuid());
+    Map<String, String> response = new HashMap<>();
+    response.put("refreshToken", jwtUtil.generateToken(user.getUuid(), false));
+    response.put("accessToken", jwtUtil.generateToken(user.getUuid(), true));
+    return response;
   }
 
   @Transactional

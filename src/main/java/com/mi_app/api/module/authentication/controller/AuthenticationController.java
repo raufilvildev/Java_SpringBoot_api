@@ -1,6 +1,5 @@
 package com.mi_app.api.module.authentication.controller;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
@@ -22,9 +21,7 @@ public class AuthenticationController {
 
   @PostMapping("/login")
   public ResponseEntity<Map<String, String>> login(@RequestBody AuthenticationLoginDto authenticationLoginDto) {
-    String token = authenticationService.login(authenticationLoginDto);
-    Map<String, String> response = new HashMap<>();
-    response.put("token", token);
+    Map<String, String> response = authenticationService.login(authenticationLoginDto);
     return ResponseEntity.ok(response);
   }
 }

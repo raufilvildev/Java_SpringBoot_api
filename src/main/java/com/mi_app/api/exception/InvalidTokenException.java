@@ -1,9 +1,14 @@
 package com.mi_app.api.exception;
 
-public class InvalidTokenException extends RuntimeException {
+import lombok.Getter;
 
-  public InvalidTokenException(String message) {
+@Getter
+public class InvalidTokenException extends RuntimeException {
+  private final String type;
+
+  public InvalidTokenException(String type, String message) {
     super("Token de autenticación inválido." + message);
+    this.type = type;
   }
 
 }

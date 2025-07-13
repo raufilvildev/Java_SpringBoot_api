@@ -1,5 +1,8 @@
 package com.mi_app.api.module.authentication.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +21,7 @@ public class AuthenticationService {
   private final JwtUtil jwtUtil;
   private final PasswordEncoder passwordEncoder;
 
-  public String login(AuthenticationLoginDto authenticationLoginDto) {
+  public Map<String, String> login(AuthenticationLoginDto authenticationLoginDto) {
     User user = userRepository.findByUsername(authenticationLoginDto.getUsername())
         .orElseThrow(() -> new IncorrectCredentialsException());
 
@@ -27,6 +30,9 @@ public class AuthenticationService {
       throw new IncorrectCredentialsException();
     }
 
-    return jwtUtil.generateToken(user.getUuid());
+    Map<String, String> response = new HashMap<>();
+    response.put("refreshToken", jwtUtil.generateToken(user.getUuid(), false));
+    response.put("accessToken", jwtUtil.generateToken(user.getUuid(), true));
+    return response;
   }
 }

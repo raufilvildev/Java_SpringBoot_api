@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.mi_app.api.exception.InvalidTokenException;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.JwtParser;
@@ -37,13 +38,16 @@ public class JwtUtil {
     this.jwtParser = Jwts.parser().verifyWith(secretKey).build();
   }
 
-  public String generateToken(String uuid) {
-    return "Bearer " + Jwts.builder()
+  public String generateToken(String uuid, boolean withExpiration) {
+    io.jsonwebtoken.JwtBuilder builder = Jwts.builder()
         .subject(uuid)
-        .issuedAt(new Date())
-        .expiration(new Date(System.currentTimeMillis() + expirationTimeMs))
-        .signWith(secretKey)
-        .compact();
+        .issuedAt(new Date());
+
+    if (withExpiration) {
+      builder.expiration(new Date(System.currentTimeMillis() + expirationTimeMs));
+    }
+
+    return "Bearer " + builder.signWith(secretKey).compact();
   }
 
   public String extractUuid(String token) {
@@ -53,8 +57,12 @@ public class JwtUtil {
   public Jws<Claims> validateToken(String token) {
     try {
       return jwtParser.parseSignedClaims(token);
-    } catch (JwtException | IllegalArgumentException e) {
-      throw new InvalidTokenException("Error al validar el token.");
+    } catch (ExpiredJwtException exception) {
+      throw new InvalidTokenException("expired", " El token ha expirado.");
+    } catch (JwtException exception) {
+      throw new InvalidTokenException("invalid", " El token es inválido.");
+    } catch (IllegalArgumentException e) {
+      throw new InvalidTokenException("invalid", " El token es vacío o mal formado.");
     }
   }
 }
