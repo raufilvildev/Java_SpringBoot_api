@@ -19,7 +19,7 @@ public class UserSignupDto {
   private String lastName;
 
   @NotBlank(message = "El campo correo electrónico es obligatorio.")
-  @Size(max = 254, message = "El correo electrónico no debe exceder los 254 caracteres.")
+  @Size(max = 255, message = "El correo electrónico no debe exceder los 255 caracteres.")
   @Email(message = "Formato de correo electrónico inválido.")
   private String email;
 
