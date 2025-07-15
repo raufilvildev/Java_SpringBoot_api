@@ -34,6 +34,9 @@ public class Participant {
   @Column(name = "is_read", nullable = false)
   private Boolean isRead;
 
+  @Column(name = "is_starred", nullable = false)
+  private Boolean isStarred;
+
   @Column(name = "is_deleted", nullable = false)
   private Boolean isDeleted;
 
@@ -42,9 +45,6 @@ public class Participant {
 
   @Column(name = "is_draft", nullable = false)
   private Boolean isDraft;
-
-  @Column(name = "is_important", nullable = false)
-  private Boolean isImportant;
 
   @Column(name = "read_at", nullable = false, insertable = false, updatable = false)
   private Instant readAt;

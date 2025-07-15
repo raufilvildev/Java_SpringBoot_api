@@ -5,7 +5,7 @@ import java.time.Instant;
 public interface ThreadSQLResponseDto {
   String getUuid();
 
-  Byte getIsImportant();
+  Byte getIsStarred();
 
   String getUsername();
 

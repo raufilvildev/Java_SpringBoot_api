@@ -18,9 +18,14 @@ import lombok.AllArgsConstructor;
 public class ThreadController {
   private final ThreadService threadService;
 
-  @GetMapping("")
-  public List<ThreadResponseDto> getAll(HttpServletRequest request) {
-    return threadService.findByUserUuid(request.getAttribute("uuid").toString());
+  @GetMapping("/inbox")
+  public List<ThreadResponseDto> getInbox(HttpServletRequest request) {
+    return threadService.findReceivedByUserUuid(request.getAttribute("uuid").toString());
+  }
+
+  @GetMapping("/sent")
+  public List<ThreadResponseDto> getSent(HttpServletRequest request) {
+    return threadService.findSentByUserUuid(request.getAttribute("uuid").toString());
   }
 
 }
